@@ -1,0 +1,16 @@
+ post_install() {
+    # Start Docker services
+    systemctl enable docker --now
+    # Build Docker Image
+    echo "Building Docker Image"
+    cd /usr/share/chromium-docker/
+    docker build -t hthiemann/chromium-armhf .
+    # Enabling xhost forwarding
+    echo "Enabling xhost forwarding"
+    xhost +local:docker
+    
+    docker volume create chromium_home
+    # Enable services
+       install -m 755 chromium-armhf /usr/local/bin
+}
+ 
