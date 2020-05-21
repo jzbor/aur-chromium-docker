@@ -5,7 +5,7 @@
 pkgname=chromium-docker
 pkgdesc='Chromium Docker Image builder with widevine'
 pkgver=4.10.1610.6
-pkgrel=1
+pkgrel=2
 #list od current images https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf
 _chromeos_ver=12739.111.0
 _chromeos_file="chromeos_${_chromeos_ver}_elm_recovery_stable-channel_mp-v2.bin"
@@ -26,9 +26,9 @@ source=("chrome-eula_text.html::https://www.google.com/intl/en/chrome/privacy/eu
         "chromium.png"
         "Chromium-Armv7.desktop")
 #noextract=("${_chromeos_file}.zip")
-md5sums=('6ad5333d3f0e468ccd5ca8c2e93e66c3'
+md5sums=('a0137b8494936358a9ee0af5c1acf949'
             'a2334d75c927fee54458b26bb8703734'
-            'e7ea67e8cfadb0c40afd069bfdefc9a5')
+            '3fcb580d9a01b15e0a4446206c663d2e')
             
 #prepare() {
   #gcc ../get_cdm_version.c -o get_cdm_version -ldl

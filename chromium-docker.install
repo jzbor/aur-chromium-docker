@@ -41,7 +41,11 @@
     echo "Open Chromium from Applications List"
     echo "Docker requires a reboot for the permissions to be set"
  }
-
+post_upgrade() {
+ cd /usr/share/chromium-docker/git/
+ git pull
+ docker build -t hthiemann/chromium-armhf .
+}
 
  post_remove() {
 
