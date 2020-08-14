@@ -10,6 +10,9 @@
     git clone --progress https://github.com/spikerguy/docker-chromium-armhf/ /usr/share/chromium-docker/git/
     
     # Fetching ChromeOs File 
+    if [[ -e "git/widevine/libwidevinecdm.so" ]]; then
+        echo "Widevine already present"
+    else
     echo "Downloading ChromeOs - Will take sometime"
     sh -c "wget -nv -q --show-progress --progress=bar:force:noscroll https://dl.google.com/dl/edgedl/chromeos/recovery/chromeos_12739.111.0_elm_recovery_stable-channel_mp-v2.bin.zip -P /usr/share/chromium-docker/" 2>&1
     
@@ -17,7 +20,7 @@
     7z e /usr/share/chromium-docker/chromeos_12739.111.0_elm_recovery_stable-channel_mp-v2.bin.zip -y -o/usr/share/chromium-docker/
     7z e /usr/share/chromium-docker/chromeos_12739.111.0_elm_recovery_stable-channel_mp-v2.bin ROOT-A.img -y -o/usr/share/chromium-docker/
     7z e /usr/share/chromium-docker/ROOT-A.img libwidevinecdm.so -r -y -o/usr/share/chromium-docker/git/widevine/
-  
+  fi
       # Build Docker Image
     echo "Building Docker Image - This will take sometime"
     cd /usr/share/chromium-docker/git
@@ -43,6 +46,7 @@
  }
 post_upgrade() {
  cd /usr/share/chromium-docker/git/
+ install -m 755 chromium-armhf /usr/local/bin
  git pull
  docker build -t hthiemann/chromium-armhf .
 }

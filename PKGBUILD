@@ -5,7 +5,7 @@
 pkgname=chromium-docker
 pkgdesc='Chromium Docker Image builder with widevine'
 pkgver=4.10.1610.6
-pkgrel=2
+pkgrel=3
 #list od current images https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf
 _chromeos_ver=12739.111.0
 _chromeos_file="chromeos_${_chromeos_ver}_elm_recovery_stable-channel_mp-v2.bin"
@@ -16,7 +16,7 @@ _commit=c135114b417f41fc6d1bce2ccb09845d1cd08e9c
 arch=('aarch64')
 url='https://www.widevine.com/'
 license=('custom')
-depends=('gcc-libs' 'glib2' 'glibc' 'nspr' 'nss' 'xorg-xhost' 'docker' 'git' 'p7zip')
+depends=('gcc-libs' 'glib2' 'glibc' 'nspr' 'nss' 'xorg-xhost' 'docker' 'git' 'p7zip' 'paprefs')
 makedepends=('p7zip')
 options=('!strip')
 install=$pkgname.install
@@ -26,9 +26,9 @@ source=("chrome-eula_text.html::https://www.google.com/intl/en/chrome/privacy/eu
         "chromium.png"
         "Chromium-Armv7.desktop")
 #noextract=("${_chromeos_file}.zip")
-md5sums=('a0137b8494936358a9ee0af5c1acf949'
+md5sums=('SKIP'
             'a2334d75c927fee54458b26bb8703734'
-            '3fcb580d9a01b15e0a4446206c663d2e')
+            'ded6d78562c1f1cd0486b3a32d8d17b4')
             
 #prepare() {
   #gcc ../get_cdm_version.c -o get_cdm_version -ldl
