@@ -26,6 +26,7 @@ post_install() {
 }
 
 post_upgrade() {
+    cd /usr/share/chromium-docker/git
     docker build -t hthiemann/chromium-armhf .
 }
 
