@@ -9,7 +9,7 @@
 pkgname=chromium-docker
 _pkgname=docker-chromium-armhf
 pkgdesc='Chromium Docker Image builder with widevine'
-pkgver=4.10.1610.6
+pkgver=78.0.3904.97
 pkgrel=1
 arch=('aarch64')
 url='https://github.com/HenningThiemann/docker-chromium-armhf'
