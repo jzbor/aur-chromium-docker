@@ -1,60 +1,36 @@
- post_install() {
+post_install() {
     # Start Docker services
+    printf "\n=== PREPARING SYSTEM ===\n"
+    echo "Enabling and starting docker service"
     systemctl enable docker --now
-    # Add user to docker group
+    echo "Creating docker group and adding user to it"
     groupadd docker
     usermod -aG docker $(whoami)
-    
-    # Getting Git content
-    echo "Cloning docker-chromium-armhf from Git Repo"
-    git clone --progress https://github.com/spikerguy/docker-chromium-armhf/ /usr/share/chromium-docker/git/
-    
-    # Fetching ChromeOs File 
-    if [[ -e "git/widevine/libwidevinecdm.so" ]]; then
-        echo "Widevine already present"
-    else
-    echo "Downloading ChromeOs - Will take sometime"
-    sh -c "wget -nv -q --show-progress --progress=bar:force:noscroll https://dl.google.com/dl/edgedl/chromeos/recovery/chromeos_12739.111.0_elm_recovery_stable-channel_mp-v2.bin.zip -P /usr/share/chromium-docker/" 2>&1
-    
-    echo "Extracting"
-    7z e /usr/share/chromium-docker/chromeos_12739.111.0_elm_recovery_stable-channel_mp-v2.bin.zip -y -o/usr/share/chromium-docker/
-    7z e /usr/share/chromium-docker/chromeos_12739.111.0_elm_recovery_stable-channel_mp-v2.bin ROOT-A.img -y -o/usr/share/chromium-docker/
-    7z e /usr/share/chromium-docker/ROOT-A.img libwidevinecdm.so -r -y -o/usr/share/chromium-docker/git/widevine/
-  fi
-      # Build Docker Image
-    echo "Building Docker Image - This will take sometime"
-    cd /usr/share/chromium-docker/git
-    docker build -t hthiemann/chromium-armhf .
-    
-    # Enabling xhost forwarding
     echo "Enabling xhost forwarding"
     xhost +local:docker
-    
+
+    # Build Docker Image
+    printf "\n=== BUILD DOCKER IMAGE (might take some time) ===\n"
+    cd /usr/share/chromium-docker/git
+    docker build -t hthiemann/chromium-armhf .
+
     #Creating Volume
+    printf "\n=== CREATING CHROMIUM HOME VOLUME ==\n"
     docker volume create chromium_home
-    install -m 755 chromium-armhf /usr/local/bin
-       
-    # Clean up
-    echo "Cleaning Up"
-    rm /usr/share/chromium-docker/chromeos_12739.111.0_elm_recovery_stable-channel_mp-v2.bin.zip
-    rm /usr/share/chromium-docker/chromeos_12739.111.0_elm_recovery_stable-channel_mp-v2.bin
-    rm /usr/share/chromium-docker/ROOT-A.img
-  
-    echo "Installing Chromium inside Docker Image Completed"
-    echo "Open Chromium from Applications List"
-    echo "Docker requires a reboot for the permissions to be set"
- }
+
+    printf "\n\nSuccessfully installed Chromium inside of a Docker container\n"
+    printf "\n=== IMPORTANT NOTICE ===\n"
+    echo "Docker requires you to reboot to get permissions right and start the service properly."
+    echo "Uninstalling this package will also remove the 'chromium-armhf' docker container."
+    echo "Uninstalling this package will leave the chromium_home volume in place."
+}
+
 post_upgrade() {
- cd /usr/share/chromium-docker/git/
- install -m 755 chromium-armhf /usr/local/bin
- git pull
- docker build -t hthiemann/chromium-armhf .
+    docker build -t hthiemann/chromium-armhf .
 }
 
- post_remove() {
-
-	rm -rf /usr/share/chromium-docker
-	rm /usr/local/bin/chromium-armhf
-
+post_remove() {
+    docker rmi hthiemann/chromium-armhf
+    rm -rf /usr/share/chromium-docker
 }
- 
+

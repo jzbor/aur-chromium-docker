@@ -1,52 +1,44 @@
+# Maintainer: jzbor <zborof@posteo.net>
+#
+# Manjaro Maintainers:
+# Based on a PKGBUILD from:
 # Original PKGBUILD By: Bart De Vries <devriesb at gmail dot com>
 # Contributor: Furkan Kardame <furkan@fkardame.com>
 # Maintainer: Henning Thiemann <hthiemann@hthiemann.tech>
 
 pkgname=chromium-docker
+_pkgname=docker-chromium-armhf
 pkgdesc='Chromium Docker Image builder with widevine'
 pkgver=4.10.1610.6
-pkgrel=3
-#list od current images https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf
-_chromeos_ver=12739.111.0
-_chromeos_file="chromeos_${_chromeos_ver}_elm_recovery_stable-channel_mp-v2.bin"
-_rootfs_img="ROOT-A.img"
-_libwidevine="libwidevinecdm.so"
-_docker_image="docker-chromium-armhf"
-_commit=c135114b417f41fc6d1bce2ccb09845d1cd08e9c
+pkgrel=1
 arch=('aarch64')
-url='https://www.widevine.com/'
+url='https://github.com/HenningThiemann/docker-chromium-armhf'
 license=('custom')
-depends=('gcc-libs' 'glib2' 'glibc' 'nspr' 'nss' 'xorg-xhost' 'docker' 'git' 'p7zip' 'paprefs')
+depends=('gcc-libs' 'glib2' 'glibc' 'nspr' 'nss' 'xorg-xhost' 'docker' 'git' 'p7zip' 'paprefs'
+    'inetutils' 'vim')
 makedepends=('p7zip')
-options=('!strip')
+options=()
 install=$pkgname.install
-source=("chrome-eula_text.html::https://www.google.com/intl/en/chrome/privacy/eula_text.html"
-        #"https://dl.google.com/dl/edgedl/chromeos/recovery/chromeos_${_chromeos_ver}_elm_recovery_stable-channel_mp-v2.bin.zip"
-        #"${_docker_image}.zip::https://github.com/spikerguy/${_docker_image}/archive/${_commit}.zip"
+source=("git+$url"
+        "chrome-eula_text.html::https://www.google.com/intl/en/chrome/privacy/eula_text.html"
         "chromium.png"
         "Chromium-Armv7.desktop")
-#noextract=("${_chromeos_file}.zip")
-md5sums=('SKIP'
-            'a2334d75c927fee54458b26bb8703734'
-            'ded6d78562c1f1cd0486b3a32d8d17b4')
-            
-#prepare() {
-  #gcc ../get_cdm_version.c -o get_cdm_version -ldl
-  #7z e ../${_chromeos_file}.zip -y
-  #7z e ${_chromeos_file} ${_rootfs_img} -y
-  #7z e ${_rootfs_img} ${_libwidevine} -r -y
-  #cp ${_libwidevine} ${_docker_image}-${_commit}/widevine
+sha256sums=('SKIP'
+            '0d847a4c7dd034af633b3f448fe107efd779e7f1873c587f07a45d3317413bfe'
+            '5c1d420c17b308987fda5fe731fc42b5bee3b9bd591aae571fd1cfc14eeb293b'
+            '8ab59fc6c58324fcf33bf315c0b675a09ac31354ad99d24ac9cf54b92bb23644')
 
- #}
-
- package() {
-    mkdir -p "${pkgdir}"/usr/share/chromium-docker/
-    mkdir -p "${pkgdir}"/usr/share/chromium-docker/git/
-    mkdir -p "${pkgdir}"/usr/share/applications/
-  #cp -r "${_docker_image}-${_commit}"/* -t "${pkgdir}/usr/share/chromium-docker"
-  #install -Dm644 ${_libwidevine} -t "$pkgdir/usr/lib/chromium/"
-  install -Dm644 ../chrome-eula_text.html "$pkgdir/usr/share/licenses/$pkgname/eula_text.html"
-  install -Dm644 ../chrome-eula_text.html chromium.png "$pkgdir/usr/share/chromium-docker/"
-  install -Dm644 Chromium-Armv7.desktop "$pkgdir/usr/share/applications/"
+package() {
+    mkdir -vp "${pkgdir}"/usr/share/chromium-docker/
+    mkdir -vp "${pkgdir}"/usr/share/applications/
+    mkdir -vp "${pkgdir}"/usr/bin/
+#cp -r "${_docker_image}-${_commit}"/* -t "${pkgdir}/usr/share/chromium-docker"
+#install -Dm644 ${_libwidevine} -t "$pkgdir/usr/lib/chromium/"
+    cp -rv "${_pkgname}" "${pkgdir}/usr/share/chromium-docker/"
+    mv -v "${pkgdir}/usr/share/chromium-docker/${_pkgname}" "${pkgdir}/usr/share/chromium-docker/git"
+    install -Dm755 "${_pkgname}/chromium-armhf" "$pkgdir/usr/bin/"
+    install -Dm644 ../chrome-eula_text.html "$pkgdir/usr/share/licenses/$pkgname/eula_text.html"
+    install -Dm644 ../chrome-eula_text.html chromium.png "$pkgdir/usr/share/chromium-docker/"
+    install -Dm644 Chromium-Armv7.desktop "$pkgdir/usr/share/applications/"
 }
- 
+
